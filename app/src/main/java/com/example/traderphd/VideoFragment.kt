@@ -32,6 +32,7 @@ class VideoFragment:Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.video_view_fragment, container, false)
         return view
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
