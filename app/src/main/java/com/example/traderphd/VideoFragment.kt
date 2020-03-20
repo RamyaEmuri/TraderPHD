@@ -7,6 +7,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -16,6 +19,7 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import kotlinx.android.synthetic.main.media_controller_view.*
 import kotlinx.android.synthetic.main.media_controller_view.view.*
 import kotlinx.android.synthetic.main.video_view_fragment.*
 import java.util.concurrent.TimeUnit
@@ -33,8 +37,28 @@ class VideoFragment:Fragment() {
         val view: View = inflater.inflate(R.layout.video_view_fragment, container, false)
         return view
 
+
+
+
     }
 
+//    seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//        @Override
+//        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//            if (fromUser)
+//                mMediaPlayer.seekTo(progress);
+//        }
+//
+//        @Override
+//        public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//        }
+//
+//        @Override
+//        public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//        }
+//    };
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         exoPlayer = ExoPlayerFactory.newSimpleInstance(context)
         val videoUrl :Uri = Uri.parse(url)
@@ -45,9 +69,10 @@ class VideoFragment:Fragment() {
         exoPlayer?.prepare(mediaSource)
         exoPlayer?.playWhenReady=false
 
-        playerView.imagePlay.setOnClickListener {
-            Log.v("dhjsfgk",exoPlayer?.currentPosition.toString())
 
+
+    playerView.imagePlay.setOnClickListener {
+            Log.v("dhjsfgk",exoPlayer?.currentPosition.toString())
 
             setTotalTimeDuration(exoPlayer?.duration)
             playerView.seekBar.max=exoPlayer?.duration?.toInt()!!
@@ -58,11 +83,53 @@ class VideoFragment:Fragment() {
                playerView.imagePlay.setImageResource(R.drawable.ic_play)
 
                pause()
+               seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener{
+                   override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
+                       if (fromUser){
+                           exoPlayer?.seekTo(progress.toLong())
+                       }
+                   }
+
+                   override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+                   }
+
+                   override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+                       if (exoPlayer != null && exoPlayer!!.isPlaying()) {
+                           exoPlayer?.seekTo(seekBar?.getProgress()!!.toLong());
+                       }
+                   }
+
+               })
                isPlaying=false
            }else{
                playerView.imagePlay.setImageResource(R.drawable.ic_pause)
 
                playerStart()
+
+               seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener{
+                   override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
+                       if (fromUser){
+                           exoPlayer?.seekTo(progress.toLong())
+                       }
+                   }
+
+                   override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+                   }
+
+                   override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+                       if (exoPlayer != null && exoPlayer!!.isPlaying()) {
+                           exoPlayer?.seekTo(seekBar?.getProgress()!!.toLong());
+                       }
+                   }
+
+               })
+
 
                isPlaying  =true
            }
@@ -93,6 +160,8 @@ class VideoFragment:Fragment() {
         }
 
     }
+
+
 //
 
     fun playerStart(){
