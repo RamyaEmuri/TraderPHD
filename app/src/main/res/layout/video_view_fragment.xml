@@ -13,7 +13,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:use_controller="true"
-
         app:controller_layout_id="@layout/media_controller_view"
         app:auto_show="true"
         app:fastforward_increment="10000"
@@ -21,8 +20,6 @@
         app:resize_mode="fixed_width"
         app:rewind_increment="10000"
         app:surface_type="surface_view"
-
-
         />
 
     <ProgressBar

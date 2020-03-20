@@ -8,17 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import kotlinx.android.synthetic.main.media_controller_view.*
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import kotlinx.android.synthetic.main.media_controller_view.view.*
 import kotlinx.android.synthetic.main.video_view_fragment.*
 import java.util.concurrent.TimeUnit
@@ -31,6 +28,7 @@ class VideoFragment:Fragment() {
     var mediaSource: MediaSource?=null
     var durationTime="00:00"
     var url = "https://videocdn.bodybuilding.com/video/mp4/62000/62792m.mp4"
+//    https://www.android-examples.com/wp-content/uploads/2016/04/Thunder-rumble.mp3
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.video_view_fragment, container, false)
         return view
@@ -39,33 +37,36 @@ class VideoFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         exoPlayer = ExoPlayerFactory.newSimpleInstance(context)
         val videoUrl :Uri = Uri.parse(url)
-        val dataSourceFactory = DefaultHttpDataSourceFactory("exoplayer_video")
+        val dataSourceFactory = DefaultDataSourceFactory(context,"exoplayer_audio")
         val extractorsFactory: ExtractorsFactory = DefaultExtractorsFactory()
         mediaSource = ExtractorMediaSource(videoUrl, dataSourceFactory, extractorsFactory, null, null)
         playerView.player = exoPlayer
         exoPlayer?.prepare(mediaSource)
         exoPlayer?.playWhenReady=false
 
-
         playerView.imagePlay.setOnClickListener {
             Log.v("dhjsfgk",exoPlayer?.currentPosition.toString())
+
 
             setTotalTimeDuration(exoPlayer?.duration)
             playerView.seekBar.max=exoPlayer?.duration?.toInt()!!
             playerView.textView2.text=durationTime
             playerView.seekBar.progress= exoPlayer?.currentPosition?.toInt()!!
+
            if (isPlaying){
                playerView.imagePlay.setImageResource(R.drawable.ic_play)
+
                pause()
                isPlaying=false
            }else{
                playerView.imagePlay.setImageResource(R.drawable.ic_pause)
+
                playerStart()
+
                isPlaying  =true
            }
 
         }
-
     }
 
     private fun setTotalTimeDuration(milliSeconds:Long?){
@@ -91,14 +92,12 @@ class VideoFragment:Fragment() {
         }
 
     }
-
+//
 
     fun playerStart(){
         exoPlayer?.playWhenReady=true
 
 //        playerView.hideController()
-
-
     }
     // video = (VideoView) findViewById(R.id.VideoView);
 //        String path1 = "http://www.w3schools.com/html5/movie.mp4";
@@ -125,7 +124,6 @@ class VideoFragment:Fragment() {
 //        playerView.hideController()
     }
 
-
-
-
 }
+
+
