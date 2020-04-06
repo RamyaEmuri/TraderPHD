@@ -26,39 +26,16 @@ import java.util.concurrent.TimeUnit
 
 
 class VideoFragment:Fragment() {
-    var isPlaying=false
-    var exoplayerView: SimpleExoPlayerView? = null
     var exoPlayer: SimpleExoPlayer? = null
     var mediaSource: MediaSource?=null
-    var durationTime="00:00"
     var url = "https://videocdn.bodybuilding.com/video/mp4/62000/62792m.mp4"
-//    https://www.android-examples.com/wp-content/uploads/2016/04/Thunder-rumble.mp3
+//    https://www.android-examples.com/wp-content/uploads/2016/04/Thunder-rumble.mp3 is for audio
+//    https://videocdn.bodybuilding.com/video/mp4/62000/62792m.mp4 is for video
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.video_view_fragment, container, false)
         return view
-
-
-
-
     }
 
-//    seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//        @Override
-//        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//            if (fromUser)
-//                mMediaPlayer.seekTo(progress);
-//        }
-//
-//        @Override
-//        public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//        }
-//
-//        @Override
-//        public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//        }
-//    };
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         exoPlayer = ExoPlayerFactory.newSimpleInstance(context)
         val videoUrl :Uri = Uri.parse(url)
@@ -68,132 +45,6 @@ class VideoFragment:Fragment() {
         playerView.player = exoPlayer
         exoPlayer?.prepare(mediaSource)
         exoPlayer?.playWhenReady=false
-
-
-
-    playerView.imagePlay.setOnClickListener {
-            Log.v("dhjsfgk",exoPlayer?.currentPosition.toString())
-
-            setTotalTimeDuration(exoPlayer?.duration)
-            playerView.seekBar.max=exoPlayer?.duration?.toInt()!!
-            playerView.textView2.text=durationTime
-            playerView.seekBar.progress= exoPlayer?.currentPosition?.toInt()!!
-
-           if (isPlaying){
-               playerView.imagePlay.setImageResource(R.drawable.ic_play)
-
-               pause()
-               seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener{
-                   override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-
-                       if (fromUser){
-                           exoPlayer?.seekTo(progress.toLong())
-                       }
-                   }
-
-                   override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-                   }
-
-                   override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-                       if (exoPlayer != null && exoPlayer!!.isPlaying()) {
-                           exoPlayer?.seekTo(seekBar?.getProgress()!!.toLong());
-                       }
-                   }
-
-               })
-               isPlaying=false
-           }else{
-               playerView.imagePlay.setImageResource(R.drawable.ic_pause)
-
-               playerStart()
-
-               seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener{
-                   override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-
-                       if (fromUser){
-                           exoPlayer?.seekTo(progress.toLong())
-                       }
-                   }
-
-                   override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-                   }
-
-                   override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-                       if (exoPlayer != null && exoPlayer!!.isPlaying()) {
-                           exoPlayer?.seekTo(seekBar?.getProgress()!!.toLong());
-                       }
-                   }
-
-               })
-
-
-               isPlaying  =true
-           }
-
-        }
     }
-
-    private fun setTotalTimeDuration(milliSeconds:Long?){
-
-        if (milliSeconds !=null) {
-            if (TimeUnit.MILLISECONDS.toHours(milliSeconds)==0L){
-                durationTime=  String.format(
-                    "%02d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(milliSeconds) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milliSeconds)), // The change is in this line
-                    TimeUnit.MILLISECONDS.toSeconds(milliSeconds) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds))
-                )}else{
-                durationTime=  String.format(
-                    "%2d:%02d:%02d",
-                    TimeUnit.MILLISECONDS.toHours(milliSeconds),
-                    TimeUnit.MILLISECONDS.toMinutes(milliSeconds) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milliSeconds)), // The change is in this line
-                    TimeUnit.MILLISECONDS.toSeconds(milliSeconds) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds))
-                )
-            }
-        }
-
-    }
-
-
-//
-
-    fun playerStart(){
-        exoPlayer?.playWhenReady=true
-
-//        playerView.hideController()
-    }
-    // video = (VideoView) findViewById(R.id.VideoView);
-//        String path1 = "http://www.w3schools.com/html5/movie.mp4";
-//        MediaController mc = new MediaController(this);
-//        mc.setAnchorView(video);
-//        mc.setMediaPlayer(video);
-//        Uri uri = Uri.parse(path1);
-//        video.setMediaController(mc);
-//        video.setVideoURI(uri);
-//        Button buttonStart = (Button) findViewById(R.id.buttonStart);
-//        buttonStart.setOnClickListener(new OnClickListener() {
-//
-//            public void onClick(View v) {
-//                video.start();
-//            }
-//
-//        });
-    fun play() {
-
-    }
-
-    fun pause() {
-        exoPlayer?.playWhenReady=false
-//        playerView.hideController()
-    }
-
 }
-
 
